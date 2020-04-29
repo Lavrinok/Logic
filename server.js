@@ -3,6 +3,8 @@ var path = require('path'); // модуль для парсинга пути
 var log = require('./libs/log')(module);
 var config = require('./libs/config');
 var app = express(); app.use(express.favicon()); // отдаем стандартную фавиконку, можем здесь же свою задать
+var ArticleModel = require('./libs/mongoose').ArticleModel;
+
 app.use(express.logger('dev')); // выводим все запросы со статусами в консоль
 app.use(express.bodyParser()); // стандартный модуль, для парсинга JSON в запросах
 app.use(express.methodOverride()); // поддержка put и delete
@@ -30,22 +32,7 @@ app.use(function (err, req, res, next) {
 app.get('/ErrorExample', function (req, res, next) {
     next(new Error('Random error!'));
 });
-// app.get('/api/articles', function (req, res) {
-//     res.send('This is not implemented now');
-// });
-// app.post('/api/articles', function (req, res) {
-//     res.send('This is not implemented now');
-// });
-// app.get('/api/articles/:id', function (req, res) {
-//     res.send('This is not implemented now');
-// });
-// app.put('/api/articles/:id', function (req, res) {
-//     res.send('This is not implemented now');
-// });
-// app.delete('/api/articles/:id', function (req, res) {
-//     res.send('This is not implemented now');
-// });
-var ArticleModel = require('./libs/mongoose').ArticleModel;
+
 app.get('/api/articles', function (req, res) {
     return ArticleModel.find(function (err, articles) {
         if (!err) {
