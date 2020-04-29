@@ -13,9 +13,11 @@ app.use(express.static(path.join(__dirname, "public"))); // запуск ста�
 app.get('/api', function (req, res) {
     res.send('API is running');
 });
+
 app.listen(config.get('port'), function () {
     log.info('Express server listening on port ' + config.get('port'));
 });
+
 app.use(function (req, res, next) {
     res.status(404);
     log.debug('Not found URL: %s', req.url);
@@ -29,6 +31,7 @@ app.use(function (err, req, res, next) {
     res.send({ error: err.message });
     return;
 });
+
 app.get('/ErrorExample', function (req, res, next) {
     next(new Error('Random error!'));
 });
@@ -39,12 +42,12 @@ app.get('/api/articles', function (req, res) {
             return res.send(articles);
         } else {
             res.statusCode = 500;
-            log.error('Internal error(%d): %s',
-                res.statusCode, err.message);
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
             return res.send({ error: 'Server error' });
         }
     });
 });
+
 app.post('/api/articles', function (req, res) {
     var article = new ArticleModel({
         title: req.body.title,
@@ -72,6 +75,7 @@ app.post('/api/articles', function (req, res) {
         }
     });
 });
+
 app.get('/api/articles/:id', function (req, res) {
     return ArticleModel.findById(req.params.id, function (err, article) {
         if (!article) {
@@ -87,6 +91,7 @@ app.get('/api/articles/:id', function (req, res) {
         }
     });
 });
+
 app.put('/api/articles/:id', function (req, res) {
     return ArticleModel.findById(req.params.id, function (err, article) {
         if (!article) {
@@ -109,12 +114,12 @@ app.put('/api/articles/:id', function (req, res) {
                     res.statusCode = 500;
                     res.send({ error: 'Server error' });
                 }
-                log.error('Internal error(%d): %s',
-                    res.statusCode, err.message);
+                log.error('Internal error(%d): %s', res.statusCode, err.message);
             }
         });
     });
 });
+
 app.delete('/api/articles/:id', function (req, res) {
     return ArticleModel.findById(req.params.id, function (err, article) {
         if (!article) {
@@ -127,8 +132,7 @@ app.delete('/api/articles/:id', function (req, res) {
                 return res.send({ status: 'OK' });
             } else {
                 res.statusCode = 500;
-                log.error('Internal error(%d): %s',
-                    res.statusCode, err.message);
+                log.error('Internal error(%d): %s', res.statusCode, err.message);
                 return res.send({ error: 'Server error' });
             }
         });
